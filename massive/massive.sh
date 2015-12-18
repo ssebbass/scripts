@@ -7,8 +7,8 @@ which ssh >/dev/null 2>&1 || echo "Please install ssh client"
 which mktemp >/dev/null 2>&1 || echo "Missing mktemp"
 
 # Check for files
-if [ -z "$1" ] || [ -z "$2" ]; then
-  echo "$0 <Host list file> <Script to run on the client> <SSH user (optional)> <SSH Password (optional)>"
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+  echo "$0 <Host list file> <Script to run on the client> <SSH user> <SSH Password (optional)>"
   exit 1
 fi
 
@@ -16,7 +16,7 @@ HOSTLIST="$1"
 SCRIPT="$2"
 SSHUSR="$3"
 PASSWD="$4"                                                                     # This is optional
-SSHOPT="-t -o ConnectTimeout=5 -o ConnectionAttempts=2"                            # Some default ssh options
+SSHOPT="-t -o ConnectTimeout=5 -o ConnectionAttempts=2"                         # Some default ssh options
 DATE=$(date +%Y%m%d%H%M)
 LOGFILE="$0.$DATE.log"
 TMPFILE="$(mktemp)"
@@ -39,7 +39,15 @@ function sshwithpasswd {
 }
 
 function sshwithoutpasswd {
-  echo ssh without a passwd
+  for HOST in $( cat $HOSTLIST ); do
+    echo -e "\n   *** $HOST ***"
+    ssh $SSHOPT $SSHUSR@$HOST < "$SCRIPT" >$TMPFILE 2>&1 ; RETVAL="$?"
+    if [ "$RETVAL" = 0 ]; then
+      sed "0,/"$TEXTDELIMETER"/d" $TMPFILE
+    else
+      echo "Error on host $HOST"
+    fi
+  done
 }
 
 function main {
@@ -52,10 +60,7 @@ function main {
 
 echo $0
 
-#      RETOURNEDMSG="`cat tmpfile | sed '0,/HEADERTEXT/d'`"
-# Main call
-
-main
+main | tee -a $LOGFILE 
 clean
-# | tee -a $LOGFILE 
+
 
