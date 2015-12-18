@@ -26,7 +26,7 @@ function clean {
 }
 
 function sshwithpasswd {
-  echo ssh withpasswd
+  sshpass -p $PASSWD ssh $SSHOPT $SSHUSR@$HOST < "$SCRIPT" 2>/dev/null > tmpfile
 }
 
 function sshwithoutpasswd {
@@ -44,7 +44,6 @@ function main {
 echo $0
 
 #      RETOURNEDMSG="`cat tmpfile | sed '0,/HEADERTEXT/d'`"
-#      sshpass -p $PASSWD ssh $SSHOPT sjuarez@$HOST < "$SCRIPT" 2>/dev/null > tmpfile
 # Main call
 
 main
