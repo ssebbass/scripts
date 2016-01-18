@@ -41,7 +41,7 @@ function sshwithpasswd {
 
 function sshwithoutpasswd {
   for HOST in $( cat $HOSTLIST ); do
-#    echo -e "\n   *** $HOST ***"
+    echo -e "\n"
     ssh $SSHOPT $SSHUSR@$HOST < "$SCRIPT" >$TMPFILE 2>&1 ; RETVAL="$?"
     if [ "$RETVAL" = 0 ]; then
       sed "0,/"$TEXTDELIMETER"/d" $TMPFILE
@@ -59,7 +59,7 @@ function main {
   fi
 }
 
-echo $0
+# echo $0
 
 main | tee -a $LOGFILE 
 clean
