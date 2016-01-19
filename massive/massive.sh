@@ -8,7 +8,7 @@ which mktemp >/dev/null 2>&1 || echo "Missing mktemp"
 
 # Check for files
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-  echo "$0 <Host list file> <Script to run on the client> <SSH user> <SSH Password (optional)>"
+  echo "$0 <HostList> <SshScript> <sshUser> <SSHPass (optional)>"
   exit 1
 fi
 
@@ -30,11 +30,13 @@ function clean {
 function sshwithpasswd {
   for HOST in $( cat $HOSTLIST ); do
 #    echo -e "\n   *** $HOST ***"
+    echo haciendo ssh a $HOST...
     sshpass -p $PASSWD ssh $SSHOPT $SSHUSR@$HOST < "$SCRIPT" >$TMPFILE 2>&1 ; RETVAL="$?"
     if [ "$RETVAL" = 0 ]; then
       sed "0,/"$TEXTDELIMETER"/d" $TMPFILE
     else
       echo "Error on host $HOST"
+      sed "0,/"$TEXTDELIMETER"/d" $TMPFILE
     fi
   done
 }
@@ -42,11 +44,13 @@ function sshwithpasswd {
 function sshwithoutpasswd {
   for HOST in $( cat $HOSTLIST ); do
     echo -e "\n"
+    echo haciendo ssh a $HOST...
     ssh $SSHOPT $SSHUSR@$HOST < "$SCRIPT" >$TMPFILE 2>&1 ; RETVAL="$?"
     if [ "$RETVAL" = 0 ]; then
       sed "0,/"$TEXTDELIMETER"/d" $TMPFILE
     else
       echo "Error on host $HOST"
+      sed "0,/"$TEXTDELIMETER"/d" $TMPFILE
     fi
   done
 }
