@@ -63,8 +63,6 @@ function main {
   fi
 }
 
-# echo $0
-
 main | tee -a $LOGFILE 
 clean
 
