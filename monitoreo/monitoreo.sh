@@ -1,7 +1,39 @@
 #!/bin/bash
+# set -x
 ## Simple bash monitoring script to gather metrics from some key services
 
 WORKDIR=$(pwd)
+
+function requiretest {
+  RUNUSER="root"
+  REQUIRES="
+    date
+    time
+    netstat
+    grep
+    wc
+    sar
+    awk
+    time
+    md5sum
+    curl
+    grep
+    cat 
+    lsof"
+
+  if [ "$( whoami )" != "root" ]; then
+    echo "You have to run this script as superuser"
+    exit 1
+  fi
+
+  for REQ in $REQUIRES; do
+    which $REQ >/dev/null 2>&1 ; RETVAL="$?"
+    if [ "$RETVAL" != "0" ]; then
+      echo "$REQ not found, please make sure you have: $REQUIRES"
+      exit 1
+    fi
+  done  
+}
 
 function print_stats {
   MD5FILE="/mnt/FinalContent/MP4/201503/WMP4H23383MTCR_full/WMP4H23383MTCR_full.mp4"
@@ -26,6 +58,8 @@ function otherstats {
   lsof 2>/dev/null | bzip2 -c > $WORKDIR/$DATE/lsof-$TIME.bz2 &
   iotop -b -n 2 2>/dev/null | bzip2 -c > $WORKDIR/$DATE/iotop.$TIME.bz2 &
   ps aux 2>/dev/null | grep 'apache2' | bzip2 -c > $WORKDIR/$DATE/ps-aux.$TIME.bz2 &
+  nfsstat -rc 2>/dev/null | bzip2 -c > $WORKDIR/$DATE/nfsstat-rc.$TIME.bz2 &
+  nfsstat -c 2>/dev/null | bzip2 -c > $WORKDIR/$DATE/nfsstat-c.$TIME.bz2 &
 }
 
 function logfile {
@@ -52,4 +86,9 @@ function main {
   done
 }
 
+function limpia {
+  find $WORKDIR -maxdepth 1 -type d -ctime +5 -exec rm -Rf {} \;
+}
+
+requiretest
 main
