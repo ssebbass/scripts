@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x
+# set -ex
 
 # Check for basic tools
 which sshpass >/dev/null 2>&1 || echo "Please install sshpass"
@@ -16,7 +16,7 @@ HOSTLIST="$1"
 SCRIPT="$2"
 SSHUSR="$3"
 PASSWD="$4"                                                                     # This is optional
-SSHOPT="-t -o ConnectTimeout=5 -o ConnectionAttempts=2"                         # Some default ssh options
+SSHOPT="-F $HOME/.ssh/config -t -o ConnectTimeout=5 -o ConnectionAttempts=2"                         # Some default ssh options
 DATE=$(date +%Y%m%d%H%M)
 WORKDIR="$( pwd )"
 LOGFILE="$WORKDIR/$(basename $0).$DATE.log"
