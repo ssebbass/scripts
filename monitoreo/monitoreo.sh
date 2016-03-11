@@ -72,17 +72,9 @@ function printhead {
 }
 
 function main {
-  COUNTER="1"
-  limpia
-  printhead
   while true; do
-    if [ "$COUNTER" -gt "60" ]; then
-      printhead
-      COUNTER="1"
-    fi
-    print_stats | tee -a `logfile`
+    limpia
     otherstats
-    COUNTER=$((COUNTER+1))
     sleep 300
   done
 }
