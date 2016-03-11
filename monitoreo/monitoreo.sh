@@ -73,6 +73,7 @@ function printhead {
 
 function main {
   COUNTER="1"
+  limpia
   printhead
   while true; do
     if [ "$COUNTER" -gt "60" ]; then
@@ -87,7 +88,7 @@ function main {
 }
 
 function limpia {
-  find $WORKDIR -maxdepth 1 -type d -ctime +5 -exec rm -Rf {} \;
+  find $WORKDIR -maxdepth 1 -type d -ctime +5 -exec rm -Rf {} \; >/dev/null 2>&1 || true
 }
 
 requiretest
