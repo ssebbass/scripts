@@ -60,6 +60,7 @@ function otherstats {
   ps aux 2>/dev/null | grep 'apache2' | bzip2 -c > $WORKDIR/$DATE/ps-aux.$TIME.bz2 &
   nfsstat -rc 2>/dev/null | bzip2 -c > $WORKDIR/$DATE/nfsstat-rc.$TIME.bz2 &
   nfsstat -c 2>/dev/null | bzip2 -c > $WORKDIR/$DATE/nfsstat-c.$TIME.bz2 &
+  nfsiostat-sysstat -h -t  | bzip2 -c > $WORKDIR/$DATE/nfsstat-h-t.$TIME.bz2 &
 }
 
 function logfile {
