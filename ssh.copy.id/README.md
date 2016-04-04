@@ -1,5 +1,5 @@
 # Purpose
-The primary purpose of this simple script, it's to test login on some hosts given:
+The primary purpose of this simple script, it's to copy ssh id on some hosts given:
 
 1. A Hosts list
 2. A username
