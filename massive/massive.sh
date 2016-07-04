@@ -45,7 +45,7 @@ function sshwithoutpasswd {
   for HOST in $( cat $HOSTLIST ); do
     echo -e "\n"
     echo haciendo ssh a $HOST
-    ssh $SSHOPT $SSHUSR@$HOST < "$SCRIPT" >$TMPFILE 2>&1 ; RETVAL="$?"
+    ssh -o PasswordAuthentication=no $SSHOPT $SSHUSR@$HOST < "$SCRIPT" >$TMPFILE 2>&1 ; RETVAL="$?"
     if [ "$RETVAL" = 0 ]; then
       sed "0,/"$TEXTDELIMETER"/d" $TMPFILE
     else
