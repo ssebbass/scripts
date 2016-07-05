@@ -30,7 +30,8 @@ function clean {
 function sshwithpasswd {
   for HOST in $( cat $HOSTLIST ); do
     #    echo -e "\n   *** $HOST ***"
-    echo haciendo ssh a $HOST
+    echo "You can tail -f $TMPFILE"
+    echo "haciendo ssh a $HOST ..."
     sshpass -p $PASSWD ssh $SSHOPT $SSHUSR@$HOST < "$SCRIPT" >$TMPFILE 2>&1 ; RETVAL="$?"
     if [ "$RETVAL" = 0 ]; then
       sed "0,/"$TEXTDELIMETER"/d" $TMPFILE
@@ -44,7 +45,8 @@ function sshwithpasswd {
 function sshwithoutpasswd {
   for HOST in $( cat $HOSTLIST ); do
     echo -e "\n"
-    echo haciendo ssh a $HOST
+    echo "You can tail -f $TMPFILE"
+    echo "haciendo ssh a $HOST ..."
     ssh -o PasswordAuthentication=no $SSHOPT $SSHUSR@$HOST < "$SCRIPT" >$TMPFILE 2>&1 ; RETVAL="$?"
     if [ "$RETVAL" = 0 ]; then
       sed "0,/"$TEXTDELIMETER"/d" $TMPFILE
